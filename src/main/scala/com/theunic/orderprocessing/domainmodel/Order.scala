@@ -47,7 +47,7 @@ final class Order(id: UUID) extends Actor with ActorLogging {
         .sequence(orderItems.map(_.ask(CalculateTotal).mapTo[BigDecimal]))
         .map(_.sum)
         .map(CalculatedOrderTotal(orderId, _))
-        .map(sender() !)
+        .pipeTo(sender())
   }
 }
 
