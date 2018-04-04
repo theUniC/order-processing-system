@@ -1,0 +1,23 @@
+<h3>New order {{ id }}</h3>
+<ngb-alert [type]="success" [hidden]="showAlert && newOrderCreatedSuccessfully">
+  <strong>Holy guacamole!</strong> The new order was created successfully!
+</ngb-alert>
+<div class="row mb-3">
+  <div class="col-md-4 order-md-2 mb-4">
+    <app-order-details [items]="orderItems"></app-order-details>
+  </div>
+
+  <div class="col-md-8 order-md-1">
+    <app-order-catalog
+      [availableItems]="availableItems"
+      (availableItemClick)="addItemToOrder($event)"></app-order-catalog>
+  </div>
+</div>
+<button
+  type="button"
+  [class.btn-primary]="!creatingNewOrder"
+  [disabled]="creatingNewOrder"
+  class="btn btn-primary btn-lg btn-block"
+  (click)="createNewOrder()">
+  Create order! <span [hidden]="!creatingNewOrder"><i class="fas fa-spin fa-spinner"></i></span>
+</button>

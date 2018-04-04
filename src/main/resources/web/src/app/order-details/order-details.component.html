@@ -1,0 +1,23 @@
+<h4 class="d-flex justify-content-between align-items-center mb-3">
+  <span class="text-muted">Order details</span>
+  <span class="badge badge-secondary badge-pill">{{ items.length }}</span>
+</h4>
+
+<ul class="list-group mb-3">
+  <li class="list-group-item d-flex justify-content-between lh-condensed list-group-item-secondary">
+    <div>
+      <h6 class="my-0">List of selected products</h6>
+    </div>
+  </li>
+  <li class="list-group-item d-flex justify-content-between lh-condensed" *ngFor="let item of items">
+    <div>
+      <h6 class="my-0">{{ item.getName() }} <small class="text-muted" [hidden]="1 >= item.getQuantity()">x {{ item.getQuantity() }}</small></h6>
+      <small class="text-muted">{{ item.getDescription() }}</small>
+    </div>
+    <span class="text-muted">{{ item.getPrice() | currency:"EUR" }}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Total (EUR)</span>
+    <strong>{{ calculateTotal() | currency:"EUR" }}</strong>
+  </li>
+</ul>

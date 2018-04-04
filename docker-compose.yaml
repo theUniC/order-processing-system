@@ -1,0 +1,15 @@
+version: "3.4"
+
+services:
+  main:
+    build:
+      context: .
+    command: "sbt run"
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+  tests:
+    build:
+      context: .
+    command: "sbt test"

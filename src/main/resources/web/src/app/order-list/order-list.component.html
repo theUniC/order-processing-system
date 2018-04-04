@@ -1,0 +1,5 @@
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let order of orders$ | async">
+    Order: {{ order.getId() }}
+  </li>
+</ul>
