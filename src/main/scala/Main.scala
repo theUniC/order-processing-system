@@ -13,7 +13,7 @@ import com.theunic.orderprocessing.domainmodel.Order
 import com.theunic.orderprocessing.infrastructure.remoting._
 import spray.json._
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 import scala.concurrent.duration._
 import scala.io.StdIn
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
@@ -35,7 +35,7 @@ object Main extends App {
       .toMat(BroadcastHub.sink[ServerSentEvent])(Keep.both)
       .run()
 
-  val route =
+  val routes =
     options {
       complete(
         HttpResponse(StatusCodes.OK)
@@ -81,11 +81,14 @@ object Main extends App {
       }
     }
 
+  val f = for {
+    bindingFuture <- Http().bindAndHandle(routes, "0.0.0.0", 3000)
+    waitOnFuture  <- Future.never
+  } yield waitOnFuture
 
-  val bindingFuture = Http().bindAndHandle(route, "localhost", 3000)
-  println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
-  StdIn.readLine() // let it run until user presses return
-  bindingFuture
-    .flatMap(_.unbind()) // trigger unbinding from the port
-    .onComplete(_ => system.terminate()) // and shutdown when done
+  sys.addShutdownHook {
+    system.terminate()
+  }
+
+  Await.ready(f, Duration.Inf)
 }

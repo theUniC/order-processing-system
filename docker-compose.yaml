@@ -1,15 +1,20 @@
 version: "3.4"
 
 services:
-  main:
-    build:
-      context: .
-    command: "sbt run"
+  backend:
+    image: hseeberger/scala-sbt
+    working_dir: /opt/order-processing
+    command: "sbt '~ run'"
     expose:
-      - "8080"
+      - "3000"
     ports:
-      - "8080:8080"
-  tests:
-    build:
-      context: .
-    command: "sbt test"
+      - "3000:3000"
+    volumes:
+      - ".:/opt/order-processing"
+  frontend:
+    build: .docker/frontend
+    command: "yarn run serve-frontend"
+    ports:
+      - "4200:4200"
+    volumes:
+      - ".:/opt/order-processing"
